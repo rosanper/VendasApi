@@ -2,12 +2,10 @@ package com.letscode.saleapi.controller;
 
 import com.letscode.saleapi.client.CepClientService;
 import com.letscode.saleapi.client.ProductClientService;
-import com.letscode.saleapi.dto.Cep;
-import com.letscode.saleapi.dto.Product;
-import com.letscode.saleapi.dto.ProductRequest;
-import com.letscode.saleapi.dto.UserRequest;
+import com.letscode.saleapi.dto.*;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.service.AddProductService;
+import com.letscode.saleapi.service.CepService;
 import com.letscode.saleapi.service.CreateCartService;
 import com.letscode.saleapi.service.RemoveProductService;
 import com.letscode.saleapi.service.impl.SalesServiceImpl;
@@ -32,6 +30,8 @@ public class SaleController {
     private final AddProductService addProductService;
 
     private final RemoveProductService removeProductService;
+
+    private final CepService cepService;
 
     @GetMapping
     public Flux<Cart> getAll(){
@@ -72,5 +72,11 @@ public class SaleController {
     public Mono<Cart> removeProduct(@RequestBody ProductRequest productRequest,@PathVariable String id){
         return removeProductService.execute(productRequest,id);
     }
+
+    @PutMapping
+    public Mono<Cart> setCep(@RequestBody CepRequest cepRequest){
+        return cepService.addCep(cepRequest);
+    }
+
 
 }
