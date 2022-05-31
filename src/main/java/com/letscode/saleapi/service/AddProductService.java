@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,8 @@ public class AddProductService {
 
     public Mono<Cart> execute(ProductRequest productRequest, String cartId){
         Mono<Cart> cart = saleRepository.findById(cartId);
-        Mono<Product> product = productClientService.getProduct(productRequest.getProductId());
+        Mono<Product> product = productClientService.getProduct(productRequest.getProductId())
+                .map(p -> this.setProductQuantity(p, productRequest.getQuantity()));
 
         return Mono.zip(cart, product).map(t -> this.addProduct(t.getT1(), t.getT2()))
                 .map(this::updateTotalPrice)
@@ -39,7 +41,16 @@ public class AddProductService {
 
     private Cart addProduct(Cart cart, Product product){
         List<Product> products = cart.getProducts();
-        products.add(product);
+        List<String> productsId = products.stream().map(Product::getId).collect(Collectors.toList());
+        if (productsId.contains(product.getId())){
+            int index = productsId.indexOf(product.getId());
+            Product prod = products.get(index);
+            int newQuantity = prod.getQuantity() + product.getQuantity();
+            prod.setQuantity(newQuantity);
+            products.set(index,prod);
+        }else {
+            products.add(product);
+        }
         cart.setProducts(products);
         return cart;
     }
@@ -48,6 +59,11 @@ public class AddProductService {
         BigDecimal total = calculatorPriceService.execute(cart);
         cart.setTotalPrice(total);
         return cart;
+    }
+
+    private Product setProductQuantity(Product product, int quantity){
+        product.setQuantity(quantity);
+        return product;
     }
 
     private Mono<Cart> saveCart(Cart cart){
