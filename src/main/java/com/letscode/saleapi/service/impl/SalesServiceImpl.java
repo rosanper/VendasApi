@@ -36,4 +36,9 @@ public class SalesServiceImpl implements SaleService {
     public Mono<Void> deleteCart(String id) {
         return saleRepository.deleteById(id);
     }
+
+    private Mono<Cart> saveCart(Cart cart){
+        Mono<Cart> save = saleRepository.save(cart);
+        return save;
+    }
 }
