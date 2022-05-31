@@ -1,7 +1,10 @@
 package com.letscode.saleapi.controller;
 
 import com.letscode.saleapi.client.CepClientService;
+import com.letscode.saleapi.client.ProductClientService;
 import com.letscode.saleapi.dto.Cep;
+import com.letscode.saleapi.dto.Product;
+import com.letscode.saleapi.dto.ProductRequest;
 import com.letscode.saleapi.dto.UserRequest;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.service.CreateCartService;
@@ -19,6 +22,8 @@ public class SaleController {
     private final SalesServiceImpl salesService;
 
     private final CepClientService cepClientService;
+
+    private final ProductClientService productClientService;
 
     private final CreateCartService createCartService;
 
@@ -46,6 +51,11 @@ public class SaleController {
     @GetMapping("/cep/{cep}")
     public Mono<Cep> getCep(@PathVariable String cep){
         return cepClientService.getCep(cep);
+    }
+
+    @GetMapping("/product")
+    public Mono<Product> getProduct(@RequestBody ProductRequest productRequest){
+        return productClientService.getProduct(productRequest.getProductId());
     }
 
 }

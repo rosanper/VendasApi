@@ -1,7 +1,10 @@
 package com.letscode.saleapi.dto;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
+@Data
 public class Product {
     private String id;
     private String name;
