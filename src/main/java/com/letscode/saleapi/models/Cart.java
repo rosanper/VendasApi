@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,14 +25,9 @@ public class Cart {
     @Id
     private String id = UUID.randomUUID().toString();
     private String userId;
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     private Cep cep;
     private Status statusCart = Status.MONTANDO;
     private List<Product> products = new ArrayList<>();
 
-    public Cart(String userId) {
-        this.id = UUID.randomUUID().toString();
-        this.userId = userId;
-        this.statusCart = Status.MONTANDO;
-    }
 }

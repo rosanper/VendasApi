@@ -23,8 +23,7 @@ public class SalesServiceImpl implements SaleService {
 
     @Override
     public Mono<Cart> createCart() {
-        Cart cart = new Cart(UUID.randomUUID().toString());
-        return saleRepository.save(cart);
+        return saleRepository.save(null);
     }
 
     @Override

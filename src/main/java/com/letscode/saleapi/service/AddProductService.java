@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -19,11 +20,14 @@ public class AddProductService {
 
     private final ProductClientService productClientService;
 
+    private final CalculatorPriceService calculatorPriceService;
+
     public Mono<Cart> execute(ProductRequest productRequest, String cartId){
         Mono<Cart> cart = saleRepository.findById(cartId);
         Mono<Product> product = productClientService.getProduct(productRequest.getProductId());
 
         return Mono.zip(cart, product).map(t -> this.addProduct(t.getT1(), t.getT2()))
+                .map(this::updateTotalPrice)
                 .flatMap(this::saveCart);
 
 
@@ -37,6 +41,12 @@ public class AddProductService {
         List<Product> products = cart.getProducts();
         products.add(product);
         cart.setProducts(products);
+        return cart;
+    }
+
+    private Cart updateTotalPrice(Cart cart){
+        BigDecimal total = calculatorPriceService.execute(cart);
+        cart.setTotalPrice(total);
         return cart;
     }
 
