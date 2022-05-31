@@ -9,6 +9,7 @@ import com.letscode.saleapi.dto.UserRequest;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.service.AddProductService;
 import com.letscode.saleapi.service.CreateCartService;
+import com.letscode.saleapi.service.RemoveProductService;
 import com.letscode.saleapi.service.impl.SalesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,8 @@ public class SaleController {
 
     private final AddProductService addProductService;
 
+    private final RemoveProductService removeProductService;
+
     @GetMapping
     public Flux<Cart> getAll(){
         return salesService.getAll();
@@ -37,7 +40,6 @@ public class SaleController {
 
     @PostMapping
     public Mono<Cart> createCart(@RequestBody UserRequest userRequest){
-
         return createCartService.execute(userRequest);
     }
 
@@ -64,6 +66,11 @@ public class SaleController {
     @PutMapping("/{id}")
     public Mono<Cart> addProduct(@RequestBody ProductRequest productRequest,@PathVariable String id){
         return addProductService.execute(productRequest,id);
+    }
+
+    @PutMapping("/{id}/remove")
+    public Mono<Cart> removeProduct(@RequestBody ProductRequest productRequest,@PathVariable String id){
+        return removeProductService.execute(productRequest,id);
     }
 
 }
