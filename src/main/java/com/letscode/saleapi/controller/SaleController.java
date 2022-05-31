@@ -2,8 +2,9 @@ package com.letscode.saleapi.controller;
 
 import com.letscode.saleapi.client.CepClientService;
 import com.letscode.saleapi.dto.Cep;
+import com.letscode.saleapi.dto.UserRequest;
 import com.letscode.saleapi.models.Cart;
-import com.letscode.saleapi.repositories.SaleRepository;
+import com.letscode.saleapi.service.CreateCartService;
 import com.letscode.saleapi.service.impl.SalesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,17 @@ public class SaleController {
 
     private final CepClientService cepClientService;
 
+    private final CreateCartService createCartService;
+
     @GetMapping
     public Flux<Cart> getAll(){
         return salesService.getAll();
     }
 
     @PostMapping
-    public Mono<Cart> createCart(){
-        return salesService.createCart();
+    public Mono<Cart> createCart(@RequestBody UserRequest userRequest){
+
+        return createCartService.execute(userRequest);
     }
 
     @DeleteMapping("/{id}")
