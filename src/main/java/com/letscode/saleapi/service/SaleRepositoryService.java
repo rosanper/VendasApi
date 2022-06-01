@@ -24,7 +24,7 @@ public class SaleRepositoryService {
         return saleRepository.deleteById(id);
     }
 
-    private Mono<Cart> saveCart(Cart cart){
+    public Mono<Cart> saveCart(Cart cart){
         Mono<Cart> save = saleRepository.save(cart);
         return save;
     }

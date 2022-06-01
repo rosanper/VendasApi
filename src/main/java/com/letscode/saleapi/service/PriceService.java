@@ -8,15 +8,21 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class CalculatorPriceService {
+public class PriceService {
 
-    public BigDecimal execute(Cart cart){
+    private BigDecimal caculatePrice(Cart cart){
         List<Product> products = cart.getProducts();
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (Product product : products) {
             totalPrice = totalPrice.add(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())));
         }
         return totalPrice;
+    }
+
+    public Cart updateTotalPrice(Cart cart){
+        BigDecimal total = this.caculatePrice(cart);
+        cart.setTotalPrice(total);
+        return cart;
     }
 
 }

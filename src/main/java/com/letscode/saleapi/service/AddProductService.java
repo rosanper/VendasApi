@@ -4,12 +4,10 @@ import com.letscode.saleapi.client.ProductClientService;
 import com.letscode.saleapi.dto.Product;
 import com.letscode.saleapi.dto.ProductRequest;
 import com.letscode.saleapi.models.Cart;
-import com.letscode.saleapi.repositories.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,26 +15,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AddProductService {
 
-    private final SaleRepository saleRepository;
-
     private final ProductClientService productClientService;
 
-    private final CalculatorPriceService calculatorPriceService;
+    private final PriceService priceService;
+
+    private final SaleRepositoryService saleRepositoryService;
 
     public Mono<Cart> execute(ProductRequest productRequest, String cartId){
-        Mono<Cart> cart = saleRepository.findById(cartId);
+        Mono<Cart> cart = saleRepositoryService.getCart(cartId);
         Mono<Product> product = productClientService.getProduct(productRequest.getProductId())
                 .map(p -> this.setProductQuantity(p, productRequest.getQuantity()));
 
         return Mono.zip(cart, product).map(t -> this.addProduct(t.getT1(), t.getT2()))
-                .map(this::updateTotalPrice)
-                .flatMap(this::saveCart);
-
-
-        //receber o id do cart e do produto
-        //buscar cart
-        //buscar produto
-        //atualizar carrinho
+                .map(priceService::updateTotalPrice)
+                .flatMap(saleRepositoryService::saveCart);
     }
 
     private Cart addProduct(Cart cart, Product product){
@@ -55,19 +47,9 @@ public class AddProductService {
         return cart;
     }
 
-    private Cart updateTotalPrice(Cart cart){
-        BigDecimal total = calculatorPriceService.execute(cart);
-        cart.setTotalPrice(total);
-        return cart;
-    }
-
     private Product setProductQuantity(Product product, int quantity){
         product.setQuantity(quantity);
         return product;
     }
 
-    private Mono<Cart> saveCart(Cart cart){
-        Mono<Cart> save = saleRepository.save(cart);
-        return save;
-    }
 }

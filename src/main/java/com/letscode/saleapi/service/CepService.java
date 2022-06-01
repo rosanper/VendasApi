@@ -15,12 +15,14 @@ public class CepService {
 
     private final CepClientService cepClientService;
 
-    private final SaleRepository saleRepository;
+    private final SaleRepositoryService saleRepositoryService;
 
     public Mono<Cart> addCep(CepRequest cepRequest){
         Mono<Cep> cep = cepClientService.getCep(cepRequest.getCep());
-        Mono<Cart> cart = saleRepository.findById(cepRequest.getCartId());
-        return Mono.zip(cart,cep).map(tuple -> this.setCep(tuple.getT1(), tuple.getT2())).flatMap(this::saveCart);
+        Mono<Cart> cart = saleRepositoryService.getCart(cepRequest.getCartId());
+        return Mono.zip(cart,cep)
+                .map(tuple -> this.setCep(tuple.getT1(), tuple.getT2()))
+                .flatMap(saleRepositoryService::saveCart);
     }
 
     private Cart setCep(Cart cart, Cep cep){
@@ -29,10 +31,6 @@ public class CepService {
         return cart;
     }
 
-    private Mono<Cart> saveCart(Cart cart){
-        Mono<Cart> save = saleRepository.save(cart);
-        return save;
-    }
 
 
 

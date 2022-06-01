@@ -5,7 +5,6 @@ import com.letscode.saleapi.dto.User;
 import com.letscode.saleapi.dto.UserIdRequest;
 import com.letscode.saleapi.dto.UserRequest;
 import com.letscode.saleapi.models.Cart;
-import com.letscode.saleapi.repositories.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -14,15 +13,15 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class CreateCartService {
 
-    private final SaleRepository saleRepository;
-
     private final UserClientService userClientService;
+
+    private final SaleRepositoryService saleRepositoryService;
 
     public Mono<Cart> execute(UserIdRequest userIdRequest){
         return userClientService.getClient(userIdRequest.getUserId())
 //                .map(user -> this.verifyUserPassword(user,userRequest))
                 .map(user -> this.createCart(user))
-                .flatMap(cart -> this.saveCart(cart));
+                .flatMap(cart -> saleRepositoryService.saveCart(cart));
     }
 
     private User verifyUserPassword(User user, UserRequest userRequest){
@@ -42,11 +41,5 @@ public class CreateCartService {
         String cartId = cart.getId();
         return userClientService.updateClient(cartId);
     }
-
-    private Mono<Cart> saveCart(Cart cart){
-        Mono<Cart> save = saleRepository.save(cart);
-        return save;
-    }
-
 
 }
