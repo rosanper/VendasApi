@@ -1,5 +1,7 @@
 package com.letscode.saleapi.service;
 
+import com.letscode.saleapi.enums.Status;
+import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.exceptions.NotExistException;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.repositories.SaleRepository;
@@ -22,7 +24,12 @@ public class SaleRepositoryService {
     }
 
     public Mono<Void> deleteCart(String id) {
-        return saleRepository.deleteById(id);
+        return getCart(id).map(cart -> verifyDeleteConditions(cart)).flatMap(cart -> saleRepository.deleteById(id));
+    }
+
+    private Cart verifyDeleteConditions(Cart cart){
+        if (cart.getStatusCart() != Status.MONTANDO) throw new BusinessException("O carrinho já foi finalizado e não pode ser deletado");
+        return cart;
     }
 
     public Mono<Cart> saveCart(Cart cart){
