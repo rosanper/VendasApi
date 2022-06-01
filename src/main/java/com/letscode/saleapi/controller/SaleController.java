@@ -5,7 +5,6 @@ import com.letscode.saleapi.client.ProductClientService;
 import com.letscode.saleapi.dto.*;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.service.*;
-import com.letscode.saleapi.service.impl.SalesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -15,8 +14,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/sales")
 @RequiredArgsConstructor
 public class SaleController {
-
-    private final SalesServiceImpl salesService;
 
     private final CepClientService cepClientService;
 
