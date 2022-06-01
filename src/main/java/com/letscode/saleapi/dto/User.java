@@ -9,6 +9,6 @@ public class User {
     private String cpf;
     private String email;
     private String password;
-    private String tell;
+    private String phoneNumber;
 
 }
