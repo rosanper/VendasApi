@@ -2,6 +2,7 @@ package com.letscode.saleapi.service;
 
 import com.letscode.saleapi.client.UserClientService;
 import com.letscode.saleapi.dto.User;
+import com.letscode.saleapi.dto.UserIdRequest;
 import com.letscode.saleapi.dto.UserRequest;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.repositories.SaleRepository;
@@ -17,17 +18,11 @@ public class CreateCartService {
 
     private final UserClientService userClientService;
 
-    public Mono<Cart> execute(UserRequest userRequest){
-        return userClientService.getClient(userRequest)
-                .map(user -> this.verifyUserPassword(user,userRequest))
-                .map(user -> createCart(user))
+    public Mono<Cart> execute(UserIdRequest userIdRequest){
+        return userClientService.getClient(userIdRequest.getUserId())
+//                .map(user -> this.verifyUserPassword(user,userRequest))
+                .map(user -> this.createCart(user))
                 .flatMap(cart -> this.saveCart(cart));
-
-        //receber UserRequest
-        //Verificar se o cliente existe
-        //Criar carrinho
-        //enviar id do carrinho para usuario
-
     }
 
     private User verifyUserPassword(User user, UserRequest userRequest){

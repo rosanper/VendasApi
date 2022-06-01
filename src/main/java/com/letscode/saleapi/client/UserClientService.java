@@ -18,24 +18,13 @@ public class UserClientService {
 
     private final WebClient webClientUser;
 
-    public Mono<User> getClient(UserRequest userRequest){
-        //Confirmar o uri, o método e a forma de enviar a informação
-//        return this.webClientUser
-//                .method(HttpMethod.GET)
-//                .uri("/users")
-//                .body(BodyInserters.fromValue(userRequest))
-//                .retrieve()
-//                .bodyToMono(User.class);
+    public Mono<User> getClient(String userId){
 
-        User user = new User();
-        user.setCpf(userRequest.getCpf());
-        user.setPassword(userRequest.getPassword());
-        user.setEmail("teste@teste.com");
-        user.setName("teste");
-        user.setId("teste");
-        user.setPhoneNumber("111111111");
-        return Mono.just(user);
-
+        return this.webClientUser
+                .method(HttpMethod.GET)
+                .uri("/users/{id}", userId)
+                .retrieve()
+                .bodyToMono(User.class);
     }
 
     public Mono<Void> updateClient(String cartId){

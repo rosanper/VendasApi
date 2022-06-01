@@ -45,8 +45,8 @@ public class SaleController {
     }
 
     @PostMapping
-    public Mono<Cart> createCart(@RequestBody UserRequest userRequest){
-        return createCartService.execute(userRequest);
+    public Mono<Cart> createCart(@RequestBody UserIdRequest userIdRequest){
+        return createCartService.execute(userIdRequest);
     }
 
     @GetMapping("/cep/{cep}")
