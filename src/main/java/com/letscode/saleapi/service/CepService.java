@@ -3,6 +3,7 @@ package com.letscode.saleapi.service;
 import com.letscode.saleapi.client.CepClientService;
 import com.letscode.saleapi.dto.Cep;
 import com.letscode.saleapi.dto.CepRequest;
+import com.letscode.saleapi.exceptions.NotExistException;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.repositories.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class CepService {
     }
 
     private Cart setCep(Cart cart, Cep cep){
-        if (cep.getCep() == null) throw new RuntimeException("erro com cep invalido");
+        if (cep.getCep() == null) throw new NotExistException("Cep invalido");
         cart.setCep(cep);
         return cart;
     }

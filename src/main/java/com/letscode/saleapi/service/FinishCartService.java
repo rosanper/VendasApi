@@ -4,6 +4,7 @@ import com.letscode.saleapi.client.UserClientService;
 import com.letscode.saleapi.dto.FinishCartRequest;
 import com.letscode.saleapi.dto.User;
 import com.letscode.saleapi.enums.Status;
+import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.models.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,26 +34,26 @@ public class FinishCartService {
     }
 
     private Cart verifyUserId(Cart cart, User user){
-        if(cart.getUserId() == user.getId()) throw new RuntimeException("erro com o id do carrinho");
+        if(cart.getUserId() == user.getId()) throw new BusinessException("userId da requisição diferente da do carrinho");
         return cart;
     }
 
     private User verifyUserCpfAndPassword(User user, String cpf, String password){
         if (!user.getCpf().equalsIgnoreCase(cpf) || !user.getPassword().equalsIgnoreCase(password))
-            throw new RuntimeException("erro verificacao usuario");
+            throw new BusinessException("Erro na validação do usuario (cpf e/ou password incorretos)");
         return user;
     }
 
     private void verifyCep(Cart cart){
-        if(cart.getCep() == null) throw new RuntimeException("erro verificacao cep");
+        if(cart.getCep() == null) throw new BusinessException("Cep não registrado");
     }
 
     private void verifyProducts(Cart cart){
-        if(cart.getProducts().isEmpty()) throw new RuntimeException("erro verificacao carrinho");
+        if(cart.getProducts().isEmpty()) throw new BusinessException("Carrinho vazio");
     }
 
     private void verifyStatusCart(Cart cart){
-        if(cart.getStatusCart() != Status.MONTANDO) throw new RuntimeException("erro verificacao status");
+        if(cart.getStatusCart() != Status.MONTANDO) throw new BusinessException("Carrinho já finalizado");
     }
 
     private Cart updateStatusCart(Cart cart){

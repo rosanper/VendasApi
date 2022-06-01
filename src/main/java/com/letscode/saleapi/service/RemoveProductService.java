@@ -2,6 +2,7 @@ package com.letscode.saleapi.service;
 
 import com.letscode.saleapi.dto.Product;
 import com.letscode.saleapi.dto.ProductRequest;
+import com.letscode.saleapi.exceptions.NotExistException;
 import com.letscode.saleapi.models.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,8 @@ public class RemoveProductService {
         List<Product> products = cart.getProducts();
         List<String> productsId = products.stream().map(Product::getId).collect(Collectors.toList());
 
-        //erro caso não tenha o produto
-        if(!productsId.contains(productRequest.getProductId())) throw new RuntimeException("erro não existe produto");
+        if(!productsId.contains(productRequest.getProductId()))
+            throw new NotExistException("Não existe produto com esse id");
 
         int index = productsId.indexOf(productRequest.getProductId());
         Product prod = products.get(index);

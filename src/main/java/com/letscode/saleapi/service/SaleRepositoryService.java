@@ -1,5 +1,6 @@
 package com.letscode.saleapi.service;
 
+import com.letscode.saleapi.exceptions.NotExistException;
 import com.letscode.saleapi.models.Cart;
 import com.letscode.saleapi.repositories.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class SaleRepositoryService {
     }
 
     public Mono<Cart> getCart(String id) {
-        return saleRepository.findById(id);
+        return saleRepository.findById(id).switchIfEmpty(Mono.error(new NotExistException("Não existe carrinho com esse id")));
     }
 
     public Mono<Void> deleteCart(String id) {
