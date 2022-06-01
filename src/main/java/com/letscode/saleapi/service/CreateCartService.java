@@ -25,13 +25,7 @@ public class CreateCartService {
     private Cart createCart(User user){
         Cart cart = new Cart();
         cart.setUserId(user.getId());
-        this.sendCartIdToUser(cart);
         return cart;
-    }
-
-    private Mono<Void> sendCartIdToUser(Cart cart){
-        String cartId = cart.getId();
-        return userClientService.updateClient(cartId);
     }
 
 }

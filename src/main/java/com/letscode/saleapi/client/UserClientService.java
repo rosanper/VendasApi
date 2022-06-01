@@ -23,15 +23,4 @@ public class UserClientService {
                 .bodyToMono(User.class);
     }
 
-    public Mono<Void> updateClient(String cartId){
-        //Confirmar o uri, o método e a forma de enviar a informação
-//        return this.webClientUser
-//                .put()
-//                .uri("users")
-//                .body(BodyInserters.fromValue(cartId))
-//                .retrieve()
-//                .bodyToMono(Void.class);
-        System.out.println("mensagem enviada, id: " + cartId);
-        return Mono.empty();
-    }
 }
