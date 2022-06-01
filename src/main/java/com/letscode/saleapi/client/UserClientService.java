@@ -2,15 +2,11 @@ package com.letscode.saleapi.client;
 
 
 import com.letscode.saleapi.dto.User;
-import com.letscode.saleapi.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor

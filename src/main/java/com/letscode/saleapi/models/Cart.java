@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,5 +30,6 @@ public class Cart {
     private Cep cep;
     private Status statusCart = Status.MONTANDO;
     private List<Product> products = new ArrayList<>();
+    private LocalDateTime purchaseDate;
 
 }

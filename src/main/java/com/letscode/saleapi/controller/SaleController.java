@@ -29,6 +29,8 @@ public class SaleController {
 
     private final SaleRepositoryService saleRepositoryService;
 
+    private final FinishCartService finishCartService;
+
     @GetMapping
     public Flux<Cart> getAll(){
         return saleRepositoryService.getAll();
@@ -72,6 +74,11 @@ public class SaleController {
     @PutMapping
     public Mono<Cart> setCep(@RequestBody CepRequest cepRequest){
         return cepService.addCep(cepRequest);
+    }
+
+    @PutMapping("/finishCart")
+    public Mono<Cart> finishCart(@RequestBody FinishCartRequest finishCartRequest){
+        return finishCartService.execute(finishCartRequest);
     }
 
 
