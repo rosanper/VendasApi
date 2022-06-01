@@ -18,8 +18,8 @@ public class RemoveProductService {
 
     private final SaleRepositoryService saleRepositoryService;
 
-    public Mono<Cart> execute(ProductRequest productRequest, String cartId){
-        return saleRepositoryService.getCart(cartId)
+    public Mono<Cart> execute(ProductRequest productRequest){
+        return saleRepositoryService.getCart(productRequest.getCartId())
                 .map(t -> this.removeProduct(t,productRequest))
                 .map(priceService::updateTotalPrice)
                 .flatMap(saleRepositoryService::saveCart);

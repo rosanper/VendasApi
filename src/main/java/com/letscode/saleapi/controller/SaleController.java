@@ -51,27 +51,17 @@ public class SaleController {
         return createCartService.execute(userIdRequest);
     }
 
-    @GetMapping("/cep/{cep}")
-    public Mono<Cep> getCep(@PathVariable String cep){
-        return cepClientService.getCep(cep);
+    @PutMapping("/addProduct")
+    public Mono<Cart> addProduct(@RequestBody ProductRequest productRequest){
+        return addProductService.execute(productRequest);
     }
 
-    @GetMapping("/product")
-    public Mono<Product> getProduct(@RequestBody ProductRequest productRequest){
-        return productClientService.getProduct(productRequest.getProductId());
+    @PutMapping("/removeProduct")
+    public Mono<Cart> removeProduct(@RequestBody ProductRequest productRequest){
+        return removeProductService.execute(productRequest);
     }
 
-    @PutMapping("/{id}")
-    public Mono<Cart> addProduct(@RequestBody ProductRequest productRequest,@PathVariable String id){
-        return addProductService.execute(productRequest,id);
-    }
-
-    @PutMapping("/{id}/remove")
-    public Mono<Cart> removeProduct(@RequestBody ProductRequest productRequest,@PathVariable String id){
-        return removeProductService.execute(productRequest,id);
-    }
-
-    @PutMapping
+    @PutMapping("addCep")
     public Mono<Cart> setCep(@RequestBody CepRequest cepRequest){
         return cepService.addCep(cepRequest);
     }

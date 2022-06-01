@@ -21,8 +21,8 @@ public class AddProductService {
 
     private final SaleRepositoryService saleRepositoryService;
 
-    public Mono<Cart> execute(ProductRequest productRequest, String cartId){
-        Mono<Cart> cart = saleRepositoryService.getCart(cartId);
+    public Mono<Cart> execute(ProductRequest productRequest){
+        Mono<Cart> cart = saleRepositoryService.getCart(productRequest.getCartId());
         Mono<Product> product = productClientService.getProduct(productRequest.getProductId())
                 .map(p -> this.setProductQuantity(p, productRequest.getQuantity()));
 
