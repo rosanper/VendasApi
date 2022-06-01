@@ -2,6 +2,7 @@ package com.letscode.saleapi.service;
 
 import com.letscode.saleapi.dto.Product;
 import com.letscode.saleapi.dto.ProductRequest;
+import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.exceptions.NotExistException;
 import com.letscode.saleapi.models.Cart;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,17 @@ public class RemoveProductService {
 
     public Mono<Cart> execute(ProductRequest productRequest){
         return saleRepositoryService.getCart(productRequest.getCartId())
+                .map(cart -> verifyUser(cart, productRequest.getUserId()))
                 .map(t -> this.removeProduct(t,productRequest))
                 .map(priceService::updateTotalPrice)
                 .flatMap(saleRepositoryService::saveCart);
+    }
+
+    public Cart verifyUser(Cart cart, String userId){
+        if (!cart.getUserId().equalsIgnoreCase(userId)){
+            throw new BusinessException("O id do usuairo passado não corresponde ao id do usuário do carrinho");
+        }
+        return cart;
     }
 
     private Cart removeProduct(Cart cart, ProductRequest productRequest){

@@ -3,6 +3,7 @@ package com.letscode.saleapi.service;
 import com.letscode.saleapi.client.ProductClientService;
 import com.letscode.saleapi.dto.Product;
 import com.letscode.saleapi.dto.ProductRequest;
+import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.models.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,22 @@ public class AddProductService {
     private final SaleRepositoryService saleRepositoryService;
 
     public Mono<Cart> execute(ProductRequest productRequest){
-        Mono<Cart> cart = saleRepositoryService.getCart(productRequest.getCartId());
+        Mono<Cart> cart = saleRepositoryService.getCart(productRequest.getCartId())
+                .map(c -> verifyUser(c, productRequest.getUserId()));
+
         Mono<Product> product = productClientService.getProduct(productRequest.getProductId())
                 .map(p -> this.setProductQuantity(p, productRequest.getQuantity()));
 
         return Mono.zip(cart, product).map(t -> this.addProduct(t.getT1(), t.getT2()))
                 .map(priceService::updateTotalPrice)
                 .flatMap(saleRepositoryService::saveCart);
+    }
+
+    public Cart verifyUser(Cart cart, String userId){
+        if (!cart.getUserId().equalsIgnoreCase(userId)){
+            throw new BusinessException("O id do usuairo passado não corresponde ao id do usuário do carrinho");
+        }
+        return cart;
     }
 
     private Cart addProduct(Cart cart, Product product){
