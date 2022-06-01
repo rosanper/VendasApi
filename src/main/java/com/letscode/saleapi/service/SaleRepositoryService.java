@@ -28,7 +28,7 @@ public class SaleRepositoryService {
     }
 
     private Cart verifyDeleteConditions(Cart cart){
-        if (cart.getStatusCart() != Status.MONTANDO) throw new BusinessException("O carrinho já foi finalizado e não pode ser deletado");
+        if (cart.getStatusCart() != Status.MOUNTING) throw new BusinessException("O carrinho já foi finalizado e não pode ser deletado");
         return cart;
     }
 

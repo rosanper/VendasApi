@@ -28,7 +28,7 @@ public class Cart {
     private String userId;
     private BigDecimal totalPrice;
     private Cep cep;
-    private Status statusCart = Status.MONTANDO;
+    private Status statusCart = Status.MOUNTING;
     private List<Product> products = new ArrayList<>();
     private LocalDateTime purchaseDate;
 

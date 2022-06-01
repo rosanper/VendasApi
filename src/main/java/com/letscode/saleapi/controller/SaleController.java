@@ -15,10 +15,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SaleController {
 
-    private final CepClientService cepClientService;
-
-    private final ProductClientService productClientService;
-
     private final CreateCartService createCartService;
 
     private final AddProductService addProductService;
@@ -30,6 +26,8 @@ public class SaleController {
     private final SaleRepositoryService saleRepositoryService;
 
     private final FinishCartService finishCartService;
+
+    private final StatusService statusService;
 
     @GetMapping
     public Flux<Cart> getAll(){
@@ -74,6 +72,11 @@ public class SaleController {
     @GetMapping("/userId/{id}")
     public Flux<Cart> getCartUser(@PathVariable String id){
         return saleRepositoryService.getCartUser(id);
+    }
+
+    @PutMapping("/status")
+    public Mono<Cart> updateStatus(@RequestBody StatusRequest statusRequest){
+        return statusService.updateStatus(statusRequest);
     }
 
 

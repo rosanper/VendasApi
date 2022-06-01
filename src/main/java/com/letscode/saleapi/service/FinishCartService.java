@@ -53,11 +53,11 @@ public class FinishCartService {
     }
 
     private void verifyStatusCart(Cart cart){
-        if(cart.getStatusCart() != Status.MONTANDO) throw new BusinessException("Carrinho já finalizado");
+        if(cart.getStatusCart() != Status.MOUNTING) throw new BusinessException("Carrinho já finalizado");
     }
 
     private Cart updateStatusCart(Cart cart){
-        cart.setStatusCart(Status.EM_TRANSITO);
+        cart.setStatusCart(Status.IN_TRANSIT);
         cart.setPurchaseDate(LocalDateTime.now());
         return cart;
     }
