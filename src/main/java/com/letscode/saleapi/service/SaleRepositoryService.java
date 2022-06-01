@@ -36,4 +36,9 @@ public class SaleRepositoryService {
         Mono<Cart> save = saleRepository.save(cart);
         return save;
     }
+
+    public Flux<Cart> getCartUser(String id){
+        return saleRepository.findByUserId(id)
+                .switchIfEmpty(Mono.error(new NotExistException("Não existe carrinho com esse id de usuario")));
+    }
 }

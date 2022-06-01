@@ -71,5 +71,10 @@ public class SaleController {
         return finishCartService.execute(finishCartRequest);
     }
 
+    @GetMapping("/userId/{id}")
+    public Flux<Cart> getCartUser(@PathVariable String id){
+        return saleRepositoryService.getCartUser(id);
+    }
+
 
 }
