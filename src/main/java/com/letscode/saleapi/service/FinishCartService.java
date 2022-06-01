@@ -15,19 +15,25 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class FinishCartService {
 
-    //receber o id do carrinho, cpf e senha (OK)
-    // validar cpf e senha
-    // verificar se cep e produtos não estao vazio (OK)
-    // alterar status do carrinho para em_transito (OK)
-
     private final SaleRepositoryService saleRepositoryService;
 
     private final UserClientService userClientService;
 
     public Mono<Cart> execute(FinishCartRequest finishCartRequest){
         Mono<Cart> cart = saleRepositoryService.getCart(finishCartRequest.getCartId())
-                .map(this::setCart)
+                .map(this::setCart);
+
+        Mono<User> user = userClientService.getClient(finishCartRequest.getUserId())
+                .map(u -> verifyUserCpfAndPassword(u, finishCartRequest.getCpf(), finishCartRequest.getPassword()));
+
+        return Mono.zip(cart,user)
+                .map(tuple -> verifyUserId(tuple.getT1(), tuple.getT2()))
                 .flatMap(saleRepositoryService::saveCart);
+
+    }
+
+    private Cart verifyUserId(Cart cart, User user){
+        if(cart.getUserId() == user.getId()) throw new RuntimeException("erro com o id do carrinho");
         return cart;
     }
 
