@@ -1,6 +1,8 @@
 package com.letscode.saleapi.client;
 
 import com.letscode.saleapi.dto.Cep;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ public class CepClientService {
 
     private final WebClient webClientCep;
 
+    @CircuitBreaker(name = "cep-circuitbreak")
     public Mono<Cep> getCep(String cep){
         return this.webClientCep
                 .method(HttpMethod.GET)

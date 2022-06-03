@@ -3,6 +3,7 @@ package com.letscode.saleapi.controller;
 import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.exceptions.ExceptionMessage;
 import com.letscode.saleapi.exceptions.NotExistException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,15 +42,27 @@ public class SaleAdviceController {
     }
 
 
-//    @ExceptionHandler(WebClientException.class)
-//    public ResponseEntity<ExceptionMessage> clientException(WebClientException e){
-//        ExceptionMessage errorMessage = ExceptionMessage.builder()
-//                .timestamp(Instant.now())
-//                .status(HttpStatus.BAD_REQUEST.value())
-//                .error("Problema com o cliente externo")
-//                .message(e.getMessage())
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-//    }
+    @ExceptionHandler(WebClientException.class)
+    public ResponseEntity<ExceptionMessage> clientException(WebClientException e){
+        ExceptionMessage errorMessage = ExceptionMessage.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Problema com o cliente externo")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<ExceptionMessage> clientException(CallNotPermittedException e){
+        ExceptionMessage errorMessage = ExceptionMessage.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Problema com o cliente externo - Circuit Breaker")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
 }
