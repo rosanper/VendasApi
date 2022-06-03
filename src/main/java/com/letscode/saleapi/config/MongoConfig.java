@@ -20,7 +20,7 @@ public class MongoConfig extends AbstractReactiveMongoConfiguration {
     @Override
     public MongoClient reactiveMongoClient(){
 
-        return MongoClients.create("mongodb://localhost:27017/sale");
+        return MongoClients.create(mongoUri);
     }
 }
 
