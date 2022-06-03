@@ -3,6 +3,7 @@ package com.letscode.saleapi.service;
 import com.letscode.saleapi.client.ProductClientService;
 import com.letscode.saleapi.dto.Product;
 import com.letscode.saleapi.dto.ProductRequest;
+import com.letscode.saleapi.enums.Status;
 import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.models.Cart;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,12 @@ public class AddProductService {
         return cart;
     }
 
+    public void validateStatusCart(Cart cart){
+        if (cart.getStatusCart() != Status.MOUNTING) throw new BusinessException("Esse carrinho não está mais sendo montado");
+    }
+
     private Cart addProduct(Cart cart, Product product){
+        validateStatusCart(cart);
         List<Product> products = cart.getProducts();
         List<String> productsId = products.stream().map(Product::getId).collect(Collectors.toList());
         if (productsId.contains(product.getId())){

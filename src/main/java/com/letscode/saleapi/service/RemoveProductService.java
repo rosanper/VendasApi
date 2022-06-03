@@ -2,6 +2,7 @@ package com.letscode.saleapi.service;
 
 import com.letscode.saleapi.dto.Product;
 import com.letscode.saleapi.dto.ProductRequest;
+import com.letscode.saleapi.enums.Status;
 import com.letscode.saleapi.exceptions.BusinessException;
 import com.letscode.saleapi.exceptions.NotExistException;
 import com.letscode.saleapi.models.Cart;
@@ -35,9 +36,15 @@ public class RemoveProductService {
         return cart;
     }
 
+
+    public void validateStatusCart(Cart cart){
+        if (cart.getStatusCart() != Status.MOUNTING) throw new BusinessException("Esse carrinho não está mais sendo montado");
+    }
+
     private Cart removeProduct(Cart cart, ProductRequest productRequest){
         List<Product> products = cart.getProducts();
         List<String> productsId = products.stream().map(Product::getId).collect(Collectors.toList());
+        validateStatusCart(cart);
 
         if(!productsId.contains(productRequest.getProductId()))
             throw new NotExistException("Não existe produto com esse id");
